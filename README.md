@@ -26,7 +26,7 @@ Instalação
 Clone o Repositório:
 
 
-git clone https://github.com/seu-usuario/nome-do-repositorio.git
+git clone https://github.com/eder-tashiro/Arduino---Cronometro.git
 Instale as Bibliotecas Necessárias:
 
 Instale as bibliotecas MD_Parola e MD_MAX72xx através do Gerenciador de Bibliotecas do Arduino IDE.
