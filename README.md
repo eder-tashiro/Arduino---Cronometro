@@ -1,5 +1,5 @@
 Parola Scrolling Display - Timer Programável
-Este projeto Arduino implementa um temporizador programável usando um display de matriz LED controlado pela biblioteca MD_Parola e MD_MAX72xx. O temporizador pode ser ajustado e controlado usando botões físicos e possui um alarme sonoro que toca quando o tempo se esgota.
+Este projeto Arduino implementa um temporizador programável usando um display de matriz LED ,controlado pela biblioteca MD_Parola e MD_MAX72xx. O temporizador pode ser ajustado e controlado usando botões físicos e possui um alarme sonoro que toca quando o tempo se esgota.
 
 Requisitos de Hardware
 Arduino Uno ou compatível
