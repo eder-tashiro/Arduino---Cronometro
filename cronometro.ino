@@ -30,15 +30,15 @@ bool isRunning = false;
 bool isPaused = false;
 unsigned long startTime = 0;
 unsigned long timeRemaining = 0;
-unsigned long initialTime = 0; // Tempo inicial
-char timeBuffer[10];
+unsigned long initialTime = 0; 
+char timeBuffer[10]; // Formato MM:SS:C
 
 const int buzzerPin = 2;
 bool buzzerOn = false;
 
 void setup() {
   Serial.begin(57600);
-  Serial.println("\n[Parola Scrolling Display - Timer Programável]\n");
+  Serial.println("\n[Parola Scrolling Display - Timer MM:SS:C]\n");
 
   pinMode(buzzerPin, OUTPUT);
   pinMode(BUTTON_START, INPUT_PULLUP);
@@ -46,7 +46,7 @@ void setup() {
   pinMode(BUTTON_DOWN, INPUT_PULLUP);
 
   P.begin();
-  displayTime(initialTime); // Mostrar o tempo inicial
+  displayTime(initialTime); 
 }
 
 void loop() {
@@ -63,12 +63,15 @@ void loop() {
       timeRemaining = 0;
       if (!buzzerOn) {
         Serial.println("Tempo esgotado, buzzer ligado");
-        tone(buzzerPin, 400); // Ajuste a frequência conforme necessário
+        tone(buzzerPin, 1500); 
         buzzerOn = true;
       }
-      isRunning = false; // Parar o timer
+      isRunning = false; 
     }
 
+    displayTime(timeRemaining);
+  } else {
+    
     displayTime(timeRemaining);
   }
 
@@ -89,13 +92,13 @@ void handleButtons() {
         isRunning = true;
         isPaused = false;
         buzzerOn = false;
-        noTone(buzzerPin); // Parar o buzzer se estiver tocando
+        noTone(buzzerPin); 
         Serial.println("Timer iniciado");
       } else {
         isPaused = !isPaused;
         if (isPaused) {
           Serial.println("Timer pausado");
-          noTone(buzzerPin); // Parar o buzzer se estiver tocando
+          noTone(buzzerPin);
         } else {
           Serial.println("Timer retomado");
           startTime = millis();
@@ -104,23 +107,25 @@ void handleButtons() {
     }
 
     if (digitalRead(BUTTON_UP) == LOW && !isRunning) {
-      initialTime += 60000; // Aumentar 1 minuto
-      if (initialTime > 3599999) { // Limite máximo de 59:59
+      initialTime += 60000;  // Adiciona 1 minuto
+      if (initialTime > 3599999) {  
         initialTime = 3599999;
       }
+      timeRemaining = initialTime;  
       Serial.print("Tempo ajustado para: ");
       Serial.println(initialTime / 1000);
-      displayTime(initialTime);
+      
+      displayTime(initialTime);  
     }
 
     if (digitalRead(BUTTON_DOWN) == LOW) {
       if (!isRunning || isPaused) {
-        initialTime = 0; // Reseta p/ qualquer valor inicial desejado
+        initialTime = 0;
         timeRemaining = initialTime;
         isPaused = false;
         isRunning = false;
         buzzerOn = false;
-        noTone(buzzerPin); // Parar o buzzer se estiver tocando
+        noTone(buzzerPin); 
         Serial.println("Timer resetado");
         displayTime(initialTime);
       }
@@ -131,10 +136,17 @@ void handleButtons() {
 }
 
 void displayTime(unsigned long milliseconds) {
-  unsigned int totalSeconds = milliseconds / 1000;
-  unsigned int minutes = totalSeconds / 60;
-  unsigned int seconds = totalSeconds % 60;
+  unsigned int totalSeconds = milliseconds / 1000;  
+  unsigned int minutes = totalSeconds / 60;         
+  unsigned int seconds = totalSeconds % 60;         
+  unsigned int centiseconds = (milliseconds % 1000) / 10;  
+  
+  // Formato de tempo MM:SS:C
+  sprintf(timeBuffer, "%02d:%02d:%1d", minutes, seconds, centiseconds);
 
-  sprintf(timeBuffer, "%02d:%02d", minutes, seconds);
-  P.setTextBuffer(timeBuffer);
+
+  Serial.print("Tempo atualizado: ");
+  Serial.println(timeBuffer);
+
+  P.print(timeBuffer);  
 }
